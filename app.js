@@ -25,7 +25,7 @@ if (!folderId) {
   const API_KEY = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs";
 
   async function fetchFiles() {
-    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${API_KEY}&fields=files(id,name,createdTime,webViewLink)&orderBy=createdTime desc`;
+    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${API_KEY}&fields=files(id,name,createdTime,webViewLink,thumbnailLink)&orderBy=createdTime desc`;
     try {
       const response = await fetch(url);
       const data = await response.json();
@@ -42,54 +42,81 @@ if (!folderId) {
 
   function renderError(message) {
     const container = document.createElement("div");
-    container.className = "container";
+    container.style.padding = "20px";
+    container.style.fontFamily = "sans-serif";
+    container.style.textAlign = "center";
+    container.style.background = "rgba(255,255,255,0.6)";
+    container.style.borderRadius = "10px";
     container.textContent = message;
     document.body.innerHTML = "";
     document.body.appendChild(container);
   }
 
   function renderFiles(files) {
-    // Match MM-YYYY-TITLE pattern
-    const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
+    const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name)); // MM-YYYY-title
+
+    const container = document.createElement("div");
+    container.style.display = "grid";
+    container.style.gridTemplateColumns = "repeat(3, 1fr)";
+    container.style.gap = "16px";
+    container.style.padding = "20px";
+    container.style.maxHeight = "90vh";
+    container.style.overflowY = "auto";
+    container.style.background = "rgba(255,255,255,0.6)";
+    container.style.borderRadius = "10px";
 
     if (filtered.length === 0) {
       renderError("No valid files found matching naming pattern.");
       return;
     }
 
-    const container = document.createElement("div");
-    container.className = "container";
-
     filtered.forEach(file => {
       const parts = file.name.split("-");
       const datePart = parts[0] + "-" + parts[1];
-      // Remove extension from title:
       let titlePart = parts.slice(2).join("-");
-      titlePart = titlePart.replace(/\.[^/.]+$/, "");
+      titlePart = titlePart.replace(/\.[^/.]+$/, ""); // remove extension
 
-      const card = document.createElement("div");
-      card.className = "card";
+      if (file.thumbnailLink) {
+        // Thumbnail card - clickable whole card, no text
+        const card = document.createElement("a");
+        card.className = "card";
+        card.href = file.webViewLink;
+        card.target = "_blank";
+        card.rel = "noopener noreferrer";
 
-      const dateEl = document.createElement("div");
-      dateEl.className = "card-date";
-      dateEl.textContent = datePart;
+        const img = document.createElement("img");
+        img.className = "card-img";
+        img.src = file.thumbnailLink;
+        img.alt = titlePart;
 
-      const titleEl = document.createElement("div");
-      titleEl.className = "card-title";
-      titleEl.textContent = titlePart;
+        card.appendChild(img);
+        container.appendChild(card);
 
-      const downloadBtn = document.createElement("a");
-      downloadBtn.className = "card-download";
-      downloadBtn.href = file.webViewLink;
-      downloadBtn.target = "_blank";
-      downloadBtn.rel = "noopener noreferrer";
-      downloadBtn.textContent = "Download";
+      } else {
+        // Fallback card with date, title, and download button
+        const card = document.createElement("div");
+        card.className = "card-fallback";
 
-      card.appendChild(dateEl);
-      card.appendChild(titleEl);
-      card.appendChild(downloadBtn);
+        const date = document.createElement("div");
+        date.textContent = datePart;
+        date.className = "fallback-date";
 
-      container.appendChild(card);
+        const title = document.createElement("div");
+        title.textContent = titlePart;
+        title.className = "fallback-title";
+
+        const download = document.createElement("a");
+        download.href = file.webViewLink;
+        download.target = "_blank";
+        download.rel = "noopener noreferrer";
+        download.textContent = "Download";
+        download.className = "fallback-download";
+
+        card.appendChild(date);
+        card.appendChild(title);
+        card.appendChild(download);
+        container.appendChild(card);
+      }
     });
 
     document.body.innerHTML = "";

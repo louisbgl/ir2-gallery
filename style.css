@@ -1,0 +1,72 @@
+/* Container grid for flashcards */
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Centered message box (error, no files) */
+.message-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: sans-serif;
+  color: #666;
+  font-size: 1.2rem;
+  padding: 0 20px;
+  text-align: center;
+}
+
+/* Flashcard style */
+.flashcard {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  font-family: sans-serif;
+  background: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 220px;
+  text-align: center;
+}
+
+/* Date on top of card */
+.flashcard-date {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+/* Title in the middle */
+.flashcard-title {
+  flex-grow: 1;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+/* Download button */
+.download-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 16px;
+  border-radius: 5px;
+  background-color: #007BFF; /* Change button color here */
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.download-btn:hover {
+  background-color: #0056b3;
+}

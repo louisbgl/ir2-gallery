@@ -2,22 +2,25 @@ const folderMapping = {
   evaluation: "1yGGH9qgl2teRSLW2ilCvlv31nZZ3jfx9",
   AMO: "1HWkYi9m2pZlguXPSz8N49Ot_uw8rwRPI",
   R_D: "1r4NLyxRmfNfIi7QILl3ctnuW2kffLnsi",
+  // add more mappings here
 };
 
 function getFolderIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   let folderParam = params.get("folder");
   if (!folderParam) return null;
+
   if (folderMapping.hasOwnProperty(folderParam.toLowerCase())) {
     return folderMapping[folderParam.toLowerCase()];
   }
+
   return folderParam;
 }
 
 const folderId = getFolderIdFromUrl();
 
 if (!folderId) {
-  showMessage("No folder specified in URL.<br>Use ?folder=evaluation or another folder name.");
+  document.body.innerHTML = "<p style='padding:20px; font-family: sans-serif;'>No folder specified in URL.<br>Use ?folder=evaluation or another folder name.</p>";
 } else {
   const API_KEY = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs";
 
@@ -27,74 +30,62 @@ if (!folderId) {
       const response = await fetch(url);
       const data = await response.json();
       if (!data.files) {
-        showMessage("No files found or error fetching files.");
+        renderError("No files found or error fetching files.");
         return;
       }
       renderFiles(data.files);
     } catch (e) {
-      showMessage("Error fetching files.");
+      renderError("Error fetching files.");
       console.error(e);
     }
   }
 
-  function showMessage(message) {
+  function renderError(message) {
     const container = document.createElement("div");
-    container.className = "message-box";
-    container.innerHTML = message;
+    container.className = "container";
+    container.textContent = message;
     document.body.innerHTML = "";
     document.body.appendChild(container);
   }
 
-  function createContainer() {
-    const container = document.createElement("div");
-    container.className = "container";
-    return container;
-  }
-
   function renderFiles(files) {
-    const filtered = files.filter(file => /^\d{2}-\d{2}-.+/.test(file.name));
-    const container = createContainer();
+    // Match MM-YYYY-TITLE pattern
+    const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
 
     if (filtered.length === 0) {
-      const msg = document.createElement("p");
-      msg.textContent = "No valid files found matching naming pattern.";
-      msg.style.gridColumn = "1 / -1";
-      msg.style.textAlign = "center";
-      msg.style.fontFamily = "sans-serif";
-      msg.style.color = "#666";
-      msg.style.fontSize = "1.2rem";
-      container.appendChild(msg);
-      document.body.innerHTML = "";
-      document.body.appendChild(container);
+      renderError("No valid files found matching naming pattern.");
       return;
     }
 
+    const container = document.createElement("div");
+    container.className = "container";
+
     filtered.forEach(file => {
-      let parts = file.name.split("-");
-      let datePart = parts[0] + "-" + parts[1];
-      let titlePart = parts.slice(2).join("-");
+      const parts = file.name.split("-");
+      const datePart = parts[0] + "-" + parts[1];
+      const titlePart = parts.slice(2).join("-");
 
       const card = document.createElement("div");
-      card.className = "flashcard";
+      card.className = "card";
 
-      const date = document.createElement("div");
-      date.className = "flashcard-date";
-      date.textContent = datePart;
+      const dateEl = document.createElement("div");
+      dateEl.className = "card-date";
+      dateEl.textContent = datePart;
 
-      const title = document.createElement("div");
-      title.className = "flashcard-title";
-      title.textContent = titlePart;
+      const titleEl = document.createElement("div");
+      titleEl.className = "card-title";
+      titleEl.textContent = titlePart;
 
-      const download = document.createElement("a");
-      download.href = file.webViewLink;
-      download.target = "_blank";
-      download.rel = "noopener noreferrer";
-      download.className = "download-btn";
-      download.textContent = "Download";
+      const downloadBtn = document.createElement("a");
+      downloadBtn.className = "card-download";
+      downloadBtn.href = file.webViewLink;
+      downloadBtn.target = "_blank";
+      downloadBtn.rel = "noopener noreferrer";
+      downloadBtn.textContent = "Download";
 
-      card.appendChild(date);
-      card.appendChild(title);
-      card.appendChild(download);
+      card.appendChild(dateEl);
+      card.appendChild(titleEl);
+      card.appendChild(downloadBtn);
 
       container.appendChild(card);
     });

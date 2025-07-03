@@ -5,38 +5,86 @@
   <title>IR2 Projects</title>
   <style>
     body {
+      margin: 0;
       font-family: sans-serif;
-      padding: 1rem;
-      background: #f9f9f9;
+      background: #f5f5f5;
     }
-    .item {
-      margin-bottom: 10px;
-      padding: 8px;
+    .container {
+      max-height: 500px;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .card {
       background: white;
+      border-radius: 8px;
+      padding: 16px;
       border: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card .info {
+      flex: 1;
+    }
+    .card .title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .card .date {
+      color: #888;
+      font-size: 0.9em;
+    }
+    .card .download {
+      background: #007BFF;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <h2>IR2 - Recent Work</h2>
-  <div id="drive-container">Loading...</div>
+  <div class="container" id="cards">
+    <!-- Cards will be inserted here -->
+  </div>
 
   <script>
-    // Replace this with your real API call later
     const files = [
-      { name: "Study on Vocational Training - 2024", createdTime: "2024-12-01" },
-      { name: "Policy Evaluation - Côte d'Ivoire", createdTime: "2024-10-10" },
-      { name: "Impact Study - European Program", createdTime: "2024-09-15" }
+      { name: "Évaluation Emploi 2024", createdTime: "2024-11-05", link: "#" },
+      { name: "Projet Tunisie Formation", createdTime: "2024-10-22", link: "#" },
+      { name: "Étude Impact Régional", createdTime: "2024-09-30", link: "#" }
     ];
 
-    const container = document.getElementById("drive-container");
+    files.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+
+    const container = document.getElementById("cards");
     container.innerHTML = "";
 
     files.forEach(file => {
-      const div = document.createElement("div");
-      div.className = "item";
-      div.innerHTML = `<strong>${file.name}</strong><br><small>${new Date(file.createdTime).toLocaleDateString()}</small>`;
-      container.appendChild(div);
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const info = document.createElement("div");
+      info.className = "info";
+      info.innerHTML = `
+        <div class="title">${file.name}</div>
+        <div class="date">${new Date(file.createdTime).toLocaleDateString()}</div>
+      `;
+
+      const btn = document.createElement("a");
+      btn.href = file.link;
+      btn.className = "download";
+      btn.textContent = "Download";
+
+      card.appendChild(info);
+      card.appendChild(btn);
+      container.appendChild(card);
     });
   </script>
 </body>

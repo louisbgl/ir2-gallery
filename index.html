@@ -62,27 +62,51 @@
   </div>
 
   <script>
-    const files = Array.from({ length: 15 }, (_, i) => ({
-      name: `Projet IR2 #${i + 1}`,
-      createdTime: `2024-${(i % 12 + 1).toString().padStart(2, '0')}-15`,
-      link: "#"
-    }));
+    const folderId = "1yGGH9qgl2teRSLW2ilCvlv31nZZ3jfx9";
+    const apiKey = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs";
 
-    files.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+    const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents&key=${apiKey}&fields=files(name,webViewLink,mimeType)`;
 
-    const container = document.getElementById("cards");
-    container.innerHTML = "";
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const files = data.files
+          .map(file => {
+            const name = file.name.replace(/\.[^/.]+$/, "");
+            const pattern = /^(\d{2})-(\d{4})-(.+)$/;
+            const match = name.match(pattern);
+            if (!match) return null;
 
-    files.forEach(file => {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="title">${file.name}</div>
-        <div class="date">${new Date(file.createdTime).toLocaleDateString()}</div>
-        <a href="${file.link}" class="download" target="_blank">Download</a>
-      `;
-      container.appendChild(card);
-    });
+            const [_, month, year, title] = match;
+            const date = new Date(`${year}-${month}-01`);
+
+            return {
+              title: title.trim(),
+              date,
+              link: file.webViewLink
+            };
+          })
+          .filter(f => f !== null)
+          .sort((a, b) => b.date - a.date);
+
+        const container = document.getElementById("cards");
+        container.innerHTML = "";
+
+        files.forEach(file => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <div class="title">${file.title}</div>
+            <div class="date">${file.date.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' })}</div>
+            <a href="${file.link}" class="download" target="_blank">Télécharger</a>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error("Drive fetch error:", err);
+        document.getElementById("cards").innerHTML = "<p>Erreur lors du chargement des fichiers.</p>";
+      });
   </script>
 </body>
 </html>

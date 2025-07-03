@@ -30,10 +30,13 @@ div.container {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
   overflow: hidden;
-  height: 250px;
+  /* Use aspect-ratio for modern browsers */
+  aspect-ratio: 1 / 1.414;
   cursor: pointer;
   text-decoration: none;
   color: inherit;
+  width: 100%;
+  max-width: 300px; /* optional max width */
 }
 
 .card-img {
@@ -41,6 +44,7 @@ div.container {
   height: 100%;
   object-fit: cover;
   display: block;
+  border-radius: 8px;
 }
 
 /* Fallback classic card */
@@ -53,31 +57,9 @@ div.container {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 250px;
+  /* same ratio for fallback cards */
+  aspect-ratio: 1 / 1.414;
+  width: 100%;
+  max-width: 300px; /* keep consistent max width */
   text-align: center;
-}
-
-.fallback-date {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-}
-
-.fallback-title {
-  font-size: 1.1rem;
-  margin-bottom: 15px;
-}
-
-.fallback-download {
-  padding: 8px 16px;
-  background-color: #007BFF; /* Easy to customize */
-  color: white;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.2s;
-}
-
-.fallback-download:hover {
-  background-color: #0056b3;
 }

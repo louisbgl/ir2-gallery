@@ -19,6 +19,12 @@ function getFolderIdFromUrl() {
 
 const folderId = getFolderIdFromUrl();
 
+function getHighResThumbnail(url) {
+  if (!url) return url;
+  // Replace =s<number> at the end with =s800 for bigger thumbnail
+  return url.replace(/=s\d+$/, '=s800');
+}
+
 if (!folderId) {
   document.body.innerHTML = "<p style='padding:20px; font-family: sans-serif;'>No folder specified in URL.<br>Use ?folder=evaluation or another folder name.</p>";
 } else {
@@ -86,7 +92,7 @@ if (!folderId) {
 
         const img = document.createElement("img");
         img.className = "card-img";
-        img.src = file.thumbnailLink;
+        img.src = getHighResThumbnail(file.thumbnailLink);
         img.alt = titlePart;
 
         card.appendChild(img);

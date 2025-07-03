@@ -19,7 +19,7 @@ const folderId = getFolderIdFromUrl();
 if (!folderId) {
   showMessage("No folder specified in URL.<br>Use ?folder=evaluation or another folder name.");
 } else {
-  const API_KEY = "YOUR_API_KEY_HERE";
+  const API_KEY = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs";
 
   async function fetchFiles() {
     const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${API_KEY}&fields=files(id,name,createdTime,webViewLink)&orderBy=createdTime desc`;

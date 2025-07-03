@@ -63,7 +63,9 @@ if (!folderId) {
     filtered.forEach(file => {
       const parts = file.name.split("-");
       const datePart = parts[0] + "-" + parts[1];
-      const titlePart = parts.slice(2).join("-");
+      // Remove extension from title:
+      let titlePart = parts.slice(2).join("-");
+      titlePart = titlePart.replace(/\.[^/.]+$/, "");
 
       const card = document.createElement("div");
       card.className = "card";

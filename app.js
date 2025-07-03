@@ -43,8 +43,8 @@ if (!folderId) {
 
   // Function to render the flashcards
   function renderFiles(files) {
-    // Filter files to match "xx-xx-TITLE" pattern (e.g. "03-24-MyDoc.pdf")
-    const filtered = files.filter(file => /^\d{2}-\d{2}-.+/.test(file.name));
+    // Filter files to match "xx-xx-TITLE" pattern (e.g. "03-2024-MyDoc.pdf")
+    const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
 
     if (filtered.length === 0) {
       document.body.innerHTML = "<p>No valid files found matching naming pattern.</p>";

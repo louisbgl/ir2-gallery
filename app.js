@@ -42,8 +42,17 @@ if (!folderId) {
   function renderFiles(files) {
     const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
 
+    // Sort by MM-YYYY parsed from filename (descending)
+    filtered.sort((a, b) => {
+      const [ma, ya] = a.name.split("-").map((p, i) => i < 2 ? parseInt(p) : p);
+      const [mb, yb] = b.name.split("-").map((p, i) => i < 2 ? parseInt(p) : p);
+      const da = new Date(ya, ma - 1);
+      const db = new Date(yb, mb - 1);
+      return db - da;
+    });
+
     if (filtered.length === 0) {
-      document.body.innerHTML = "<p class='error-message'>No valid files found matching naming pattern (MM-YYYY-TITLE.ext).</p>";
+      document.body.innerHTML = "<p class='error-message'>No valid files found matching naming pattern (MM-YYYY-Title.ext).</p>";
       return;
     }
 

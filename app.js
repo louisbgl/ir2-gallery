@@ -78,7 +78,7 @@ if (!folderId) {
       card.style.height = "200px";
 
       const title = document.createElement("h3");
-      title.textContent = `IR2 test ${i + 1}: ${titlePart}`;
+      title.textContent = `${titlePart}`;
       title.style.fontSize = "1.1rem";
       title.style.margin = "0 0 10px 0";
       title.style.flexGrow = "1";

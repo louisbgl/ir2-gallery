@@ -21,7 +21,7 @@ const folderId = getFolderIdFromUrl();
 if (!folderId) {
   document.body.innerHTML = "<p class='error-message'>No folder specified in URL. Use ?folder=evaluation or another folder name.</p>";
 } else {
-  const API_KEY = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs";
+  const API_KEY = "AIzaSyAf8fcQDvfOsuRATtYR9ftdSijNfO4uBPs"; // Replace with your actual key
 
   async function fetchFiles() {
     const url = `https://www.googleapis.com/drive/v3/files?q='${folderId}'+in+parents+and+trashed=false&key=${API_KEY}&fields=files(id,name,createdTime,webViewLink,thumbnailLink,hasThumbnail)&orderBy=createdTime desc`;
@@ -42,7 +42,7 @@ if (!folderId) {
   function renderFiles(files) {
     const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
 
-    // Sort by MM-YYYY parsed from filename (descending)
+    // Sort by date from filename
     filtered.sort((a, b) => {
       const [ma, ya] = a.name.split("-").map((p, i) => i < 2 ? parseInt(p) : p);
       const [mb, yb] = b.name.split("-").map((p, i) => i < 2 ? parseInt(p) : p);
@@ -69,7 +69,8 @@ if (!folderId) {
 
       if (file.hasThumbnail && file.thumbnailLink) {
         const img = document.createElement("img");
-        img.src = file.thumbnailLink;
+        // Improve thumbnail resolution
+        img.src = file.thumbnailLink.replace(/=s\d+/, "=s800");
         img.alt = titlePart;
 
         card.appendChild(img);

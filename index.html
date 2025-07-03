@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IR2 Projects</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      background: #f9f9f9;
+    }
+    .item {
+      margin-bottom: 10px;
+      padding: 8px;
+      background: white;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h2>IR2 - Recent Work</h2>
+  <div id="drive-container">Loading...</div>
+
+  <script>
+    // Replace this with your real API call later
+    const files = [
+      { name: "Study on Vocational Training - 2024", createdTime: "2024-12-01" },
+      { name: "Policy Evaluation - Côte d'Ivoire", createdTime: "2024-10-10" },
+      { name: "Impact Study - European Program", createdTime: "2024-09-15" }
+    ];
+
+    const container = document.getElementById("drive-container");
+    container.innerHTML = "";
+
+    files.forEach(file => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `<strong>${file.name}</strong><br><small>${new Date(file.createdTime).toLocaleDateString()}</small>`;
+      container.appendChild(div);
+    });
+  </script>
+</body>
+</html>

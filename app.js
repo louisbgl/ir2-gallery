@@ -32,6 +32,9 @@ if (!folderId) {
         document.body.innerHTML = "<p class='error-message'>No files found or error fetching files.</p>";
         return;
       }
+
+      console.log("Total files fetched:", data.files.length);
+
       renderFiles(data.files);
     } catch (e) {
       document.body.innerHTML = "<p class='error-message'>Error fetching files.</p>";
@@ -41,6 +44,8 @@ if (!folderId) {
 
   function renderFiles(files) {
     const filtered = files.filter(file => /^\d{2}-\d{4}-.+/.test(file.name));
+
+    console.log("Total filtered files:", filtered.length);
 
     // Sort by date from filename
     filtered.sort((a, b) => {

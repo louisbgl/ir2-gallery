@@ -7,6 +7,7 @@ const folderMapping = {
 function getFolderIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   let folderParam = params.get("folder");
+  console.log("Folder parameter from URL:", folderParam);
   if (!folderParam) return null;
 
   if (folderMapping.hasOwnProperty(folderParam.toLowerCase())) {
@@ -17,6 +18,7 @@ function getFolderIdFromUrl() {
 }
 
 const folderId = getFolderIdFromUrl();
+console.log("Using folder ID:", folderId);
 
 if (!folderId) {
   document.body.innerHTML = "<p class='error-message'>No folder specified in URL. Use ?folder=evaluation or another folder name.</p>";

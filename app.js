@@ -10,8 +10,8 @@ function getFolderIdFromUrl() {
   console.log("Folder parameter from URL:", folderParam);
   if (!folderParam) return null;
 
-  if (folderMapping.hasOwnProperty(folderParam.toLowerCase())) {
-    return folderMapping[folderParam.toLowerCase()];
+  if (folderMapping.hasOwnProperty(folderParam)) {
+    return folderMapping[folderParam];
   }
 
   return folderParam;

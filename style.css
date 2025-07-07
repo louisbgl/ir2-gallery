@@ -1,13 +1,15 @@
 /* Container grid */
 .container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 16px;
   padding: 20px;
   overflow-y: auto;
   max-height: 90vh;
   background: rgba(255, 255, 255, 0.7);
   font-family: sans-serif;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Flashcard with fixed A4 ratio */
@@ -17,13 +19,10 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   overflow: hidden;
-  aspect-ratio: 1 / 1.414; /* portrait (A4) */
-  width: 100%;
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  width: 100%;
+  padding-bottom: 141.4%; /* A4 ratio (1/1.414 ≈ 0.7071) = 70.71% padding, doubled to ensure enough space */
+  display: block; /* Changed from flex to block */
 }
 
 /* Thumbnail image */
@@ -33,6 +32,9 @@
   object-fit: cover; /* fill + crop */
   display: block;
   border-radius: 8px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 /* For non-thumbnail fallback content */
@@ -44,6 +46,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 /* Download button */
@@ -71,4 +78,30 @@
   max-width: 600px;
   margin: 40px auto;
   text-align: center;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    padding: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+  }
+  
+  .flashcard {
+    padding-bottom: 120%; /* Slightly less tall on mobile */
+  }
+}
+
+/* Fix for Safari */
+@supports (-webkit-appearance:none) {
+  .flashcard {
+    height: 0; /* Ensure padding-bottom works correctly in Safari */
+  }
 }
